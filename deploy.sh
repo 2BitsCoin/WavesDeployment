@@ -57,7 +57,7 @@ make_conn() {
 FILENAME=''
 
     find $CPATH/keys/*.pem -type f | while read FILENAME; do
-    CCONN=$(/usr/bin/ssh -o StrictHostKeyChecking=no -q -n -i $FILENAME ubuntu@$HOST)
+    CCONN=$(/usr/bin/ssh -o StrictHostKeyChecking=no -oBatchMode=yes -q -n -i $FILENAME ubuntu@$HOST)
     if [ $? -eq 0 ]; then
         echo "$HOST:$FILENAME" >> ./keys/keys
     fi
@@ -106,11 +106,20 @@ do
         fi
     fi
 
+    sshname="$i[sshname]"
+    SSHNAME=${!sshname}
+    if ! [ -z SSHNAME ]; then
+        SSHNAME=ubuntu
+
+    fi
+
 # Copy some to deployment host
     if [ $NOLOAD -eq 0 ]; then
     echo "Copying $DEBNAME to $HOST:"
-    scp -o StrictHostKeyChecking=no -i $KNAME $DEBNAME ubuntu@$HOST:/tmp/$DSTNAME
+    scp -o StrictHostKeyChecking=no -i $KNAME $DEBNAME $SSHNAME@$HOST:/tmp/$DSTNAME
     echo "Loaded To: $HOST ."
+    else
+        echo "Running $HOST..."
     fi
 
 # Get random string for task file name

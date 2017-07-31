@@ -1,4 +1,6 @@
 sudo systemctl stop waves-devnet
+sudo rm -rf /etc/waves-devnet
+sudo rm -rf /usr/share/waves-devnet/conf/waves.conf
 sudo dpkg -i /tmp/current.deploy
 sudo sed -e 's/seed\ =.*$/seed = \"w{seed}\"/g' /usr/share/waves-devnet/conf/waves.conf > /tmp/waves.conf
 sudo mv -f /tmp/waves.conf /usr/share/waves-devnet/conf/waves.conf
